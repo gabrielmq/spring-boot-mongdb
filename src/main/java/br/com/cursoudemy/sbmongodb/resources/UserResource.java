@@ -1,6 +1,7 @@
 package br.com.cursoudemy.sbmongodb.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cursoudemy.sbmongodb.domain.User;
+import br.com.cursoudemy.sbmongodb.dto.UserDTO;
 import br.com.cursoudemy.sbmongodb.services.UserService;
 
 @RestController
@@ -19,8 +21,10 @@ public class UserResource {
 	private UserService service;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<User>> findAll() {
+	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> users = service.findAll();
-		return ResponseEntity.ok().body(users);
+		List<UserDTO> usersDto = users.stream()
+				.map( user -> new UserDTO(user) ).collect(Collectors.toList());
+		return ResponseEntity.ok().body(usersDto);
 	}
 }
