@@ -32,9 +32,9 @@ public class UserResource {
 		return ResponseEntity.ok().body(usersDto);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
-		User user = service.findById(id);
+	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+	public ResponseEntity<UserDTO> findById(@PathVariable String userId) {
+		User user = service.findById(userId);
 		return ResponseEntity.ok().body(new UserDTO(user));
 	}
 	
@@ -43,13 +43,20 @@ public class UserResource {
 		User user = service.fromDTO(userDto);
 		user = service.insert(user);
 		// coloca no response um cabeçalho com a url do novo recurso criado
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userId}").buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).build(); // response vazio com código 201 - created
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable String id) {
-		service.delete(id);
+	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String userId) {
+		service.delete(userId);
 		return ResponseEntity.noContent().build(); // retorna código 204
 	}
-}
+	
+	@RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@PathVariable String userId, @RequestBody UserDTO userDto) {
+		User user = service.fromDTO(userDto);
+		user.setId(userId);
+		service.update(user);
+		return ResponseEntity.noContent().build();
+	}}
