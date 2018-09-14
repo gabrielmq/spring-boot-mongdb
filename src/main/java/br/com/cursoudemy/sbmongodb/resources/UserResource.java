@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.cursoudemy.sbmongodb.domain.Post;
 import br.com.cursoudemy.sbmongodb.domain.User;
 import br.com.cursoudemy.sbmongodb.dto.UserDTO;
 import br.com.cursoudemy.sbmongodb.services.UserService;
@@ -59,4 +60,10 @@ public class UserResource {
 		user.setId(userId);
 		service.update(user);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/{userId}/posts", method = RequestMethod.GET)
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String userId) {
+		User user = service.findById(userId);
+		return ResponseEntity.ok().body(user.getPosts());
 	}}
